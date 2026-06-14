@@ -1,0 +1,105 @@
+Opis klas.
+Main:Klasa uruchomieniowa. Inicjalizuje dane testowe, zarządza pętlą interfejsu tekstowego w konsoli oraz przekazuje dane wprowadzone przez użytkownika do serwisu.
+Student:Przechowującą dane studentów osobowe oraz stan punktów lojalnościowych. Posiada metodę do modyfikacji punktów.
+Equipment:Abstrakcyjna klasa bazowa dla wszystkich urządzeń. Definiuje wspólne cechy (ID, nazwa, dostępność) oraz deklaruje polimorficzne metody liczenia cen i generowania informacji tekstowych.
+LaptopSet i CameraKit:Klasy dziedziczące po Equipment. Implementują własne, specyficzne dla danego sprzętu reguły naliczania ceny dziennej
+Reservation:Reprezentuje fakt wypożyczenia. Wiąże w kompozycji obiekt studenta i obiekt sprzętu, wyliczając koszt całkowity z uwzględnieniem przekazanej polityki rabatowej.
+ReservationService:Odpowiada za walidację procesów (czy encje istnieją, czy sprzęt jest wolny), przetrzymywanie kolekcji obiektów oraz transformacje stanów rezerwacji i naliczanie punktów lojalnościowych.
+Opis  interfejsów.
+Displayable:Implementowany przez klasy Equipment oraz Reservation.Wymusza napisanie metody getDisplayText(). Dzięki temu system konsolowy potrafi w łatwy sposób w pętli renderować stan dowolnego obiektu bez bezpośredniego wyciągania z niego pojedynczych pól za pomocą getterów w klasie Main.
+DiscountPolicy:Definiuje kontrakt dla systemów zniżkowych. Implementuje go klasa LoyaltyDiscountPolicy. Pozwala to na pełną separację logiki obliczania zniżek od logiki samej rezerwacji.W przyszłości można łatwo dodać inną zniżkę bez modyfikowania kodu klasy Reservation.
+Wyjaśnienie polimorfizmu w programie.
+Polimorfizm zachodzi w programie w kluczowym momencie obliczania kosztów rezerwacji w klasie Reservation oraz wypisywania danych sprzętu.
+W liście inwentarza (List<Equipment> inventory) przechowujemy referencje do obiektów LaptopSet oraz CameraKit pod wspólnym typem bazowym Equipment.
+Gdy wywoływana jest metoda:
+"double priceBeforeDiscount = equipment.calculateDailyPrice() * days;"
+Aplikacja w czasie wykonywania (Runtime) decyduje, którą metodę uruchomić. Jeśli pod zmienną equipment kryje się LaptopSet, zostaną doliczone opłaty za stację dokującą i RAM. Jeśli jest to CameraKit, doliczona zostanie kwota za obiektywy i statyw. Klasa Reservation nie musi wiedzieć, z jakim dokładnie typem sprzętu współpracuje – operuje wyłącznie na abstrakcji.
+_______________________________________________________________________
+Zapis z konsoli.
+--- MediaLab System Rezerwacji ---
+1. Wyświetl listę studentów
+2. Wyświetl dostępny sprzęt
+3. Utwórz rezerwację
+4. Zwróć sprzęt
+5. Wyświetl aktywne rezerwacje
+6. Wyświetl raport końcowy
+0. Zakończ
+Wybór: 2
+
+--- STAN SPRZĘTU ---
+[E001] Lenovo ThinkPad Lab (LaptopSet) - Cena/dzień: 120,00 PLN | Dostępny: TAK | Szczegóły: 32 GB RAM, stacja dokująca
+[E002] Dell XPS Demo (LaptopSet) - Cena/dzień: 100,00 PLN | Dostępny: TAK | Szczegóły: 16 GB RAM, brak stacji dokującej
+[E003] Sony Content Kit (CameraKit) - Cena/dzień: 135,00 PLN | Dostępny: TAK | Szczegóły: 3 obiektyw(y), statyw
+[E004] Canon Interview Kit (CameraKit) - Cena/dzień: 95,00 PLN | Dostępny: TAK | Szczegóły: 1 obiektyw(y), statyw
+
+--- MediaLab System Rezerwacji ---
+1. Wyświetl listę studentów
+2. Wyświetl dostępny sprzęt
+3. Utwórz rezerwację
+4. Zwróć sprzęt
+5. Wyświetl aktywne rezerwacje
+6. Wyświetl raport końcowy
+0. Zakończ
+Wybór: 3
+Podaj ID studenta: S001
+Podaj ID sprzętu: E003
+Podaj liczbę dni: 3
+
+Sukces!
+Rezerwacja R001: Student: Anna Kowalska, Sprzęt: Sony Content Kit, Dni: 3, Koszt całkowity: 364,50 PLN, Status: ACTIVE
+
+--- MediaLab System Rezerwacji ---
+1. Wyświetl listę studentów
+2. Wyświetl dostępny sprzęt
+3. Utwórz rezerwację
+4. Zwróć sprzęt
+5. Wyświetl aktywne rezerwacje
+6. Wyświetl raport końcowy
+0. Zakończ
+Wybór: 3
+Podaj ID studenta: S002
+Podaj ID sprzętu: E003
+Podaj liczbę dni: 2
+Błąd: Sprzęt E003 nie jest obecnie dostępny.
+
+--- MediaLab System Rezerwacji ---
+1. Wyświetl listę studentów
+2. Wyświetl dostępny sprzęt
+3. Utwórz rezerwację
+4. Zwróć sprzęt
+5. Wyświetl aktywne rezerwacje
+6. Wyświetl raport końcowy
+0. Zakończ
+Wybór: 4
+Podaj ID rezerwacji: R001
+Zwrócono sprzęt. Student otrzymał 36 punkty lojalnościowe.
+
+--- MediaLab System Rezerwacji ---
+1. Wyświetl listę studentów
+2. Wyświetl dostępny sprzęt
+3. Utwórz rezerwację
+4. Zwróć sprzęt
+5. Wyświetl aktywne rezerwacje
+6. Wyświetl raport końcowy
+0. Zakończ
+Wybór: 6
+
+=== RAPORT KOŃCOWY ===
+Liczba aktywnych rezerwacji: 0
+Liczba zakończonych rezerwacji: 1
+Łączny przychód ze zwróconego sprzętu: 364,50 PLN
+Student z największą liczbą punktów lojalnościowych: Anna Kowalska (156 pkt)
+=======================
+
+--- MediaLab System Rezerwacji ---
+1. Wyświetl listę studentów
+2. Wyświetl dostępny sprzęt
+3. Utwórz rezerwację
+4. Zwróć sprzęt
+5. Wyświetl aktywne rezerwacje
+6. Wyświetl raport końcowy
+0. Zakończ
+Wybór: 0
+Dziękujemy za skorzystanie z systemu MediaLab!
+
+Process finished with exit code 0
